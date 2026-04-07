@@ -19,7 +19,7 @@ MonoBehaviour:
     RequiredAtoms:
     - Element: 1
       RequiredCount: 2
-    MoleculePrefab: {fileID: 0}
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 6968962584371e148ad8a7f4248913bb, type: 3}
   - MoleculeName: Water
     Formula: H2O
     BondType: Covalent
@@ -35,14 +35,14 @@ MonoBehaviour:
     RequiredAtoms:
     - Element: 0
       RequiredCount: 2
-    MoleculePrefab: {fileID: 0}
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 17f4ab4f7fbe3c642a4220326740207a, type: 3}
   - MoleculeName: Nitrogen Gas
     Formula: N2
     BondType: Triple Covalent
     RequiredAtoms:
     - Element: 3
       RequiredCount: 2
-    MoleculePrefab: {fileID: 0}
+    MoleculePrefab: {fileID: 8618242438872457755, guid: fe7550938baac974ba00a065049551cb, type: 3}
   - MoleculeName: Ammonia
     Formula: NH3
     BondType: Covalent
@@ -51,7 +51,7 @@ MonoBehaviour:
       RequiredCount: 1
     - Element: 0
       RequiredCount: 3
-    MoleculePrefab: {fileID: 0}
+    MoleculePrefab: {fileID: 8618242438872457755, guid: e4e0cb37175ecc544a0b258de74aa633, type: 3}
   - MoleculeName: Carbon Dioxide
     Formula: CO2
     BondType: Double Covalent
@@ -60,7 +60,7 @@ MonoBehaviour:
       RequiredCount: 1
     - Element: 1
       RequiredCount: 2
-    MoleculePrefab: {fileID: 0}
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 1e6b30289144ee248a17ec107576605c, type: 3}
   - MoleculeName: Methane
     Formula: CH4
     BondType: Covalent
@@ -69,4 +69,4 @@ MonoBehaviour:
       RequiredCount: 1
     - Element: 0
       RequiredCount: 4
-    MoleculePrefab: {fileID: 0}
+    MoleculePrefab: {fileID: 8618242438872457755, guid: e3da35e9a9b872746baa2f037641a8ed, type: 3}

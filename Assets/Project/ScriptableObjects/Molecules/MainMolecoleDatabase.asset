@@ -20,3 +20,53 @@ MonoBehaviour:
     - Element: 1
       RequiredCount: 2
     MoleculePrefab: {fileID: 0}
+  - MoleculeName: Water
+    Formula: H2O
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 0
+      RequiredCount: 2
+    - Element: 1
+      RequiredCount: 1
+    MoleculePrefab: {fileID: 0}
+  - MoleculeName: Hydrogen Gas
+    Formula: H2
+    BondType: Single Covalent
+    RequiredAtoms:
+    - Element: 0
+      RequiredCount: 2
+    MoleculePrefab: {fileID: 0}
+  - MoleculeName: Nitrogen Gas
+    Formula: N2
+    BondType: Triple Covalent
+    RequiredAtoms:
+    - Element: 3
+      RequiredCount: 2
+    MoleculePrefab: {fileID: 0}
+  - MoleculeName: Ammonia
+    Formula: NH3
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 3
+      RequiredCount: 1
+    - Element: 0
+      RequiredCount: 3
+    MoleculePrefab: {fileID: 0}
+  - MoleculeName: Carbon Dioxide
+    Formula: CO2
+    BondType: Double Covalent
+    RequiredAtoms:
+    - Element: 2
+      RequiredCount: 1
+    - Element: 1
+      RequiredCount: 2
+    MoleculePrefab: {fileID: 0}
+  - MoleculeName: Methane
+    Formula: CH4
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 2
+      RequiredCount: 1
+    - Element: 0
+      RequiredCount: 4
+    MoleculePrefab: {fileID: 0}

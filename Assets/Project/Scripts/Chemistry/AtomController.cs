@@ -22,6 +22,8 @@ namespace VRChemistryLab.Chemistry
         private MeshRenderer meshRenderer;
         private XRGrabInteractable grabInteractable;
 
+        public bool IsGrabbed => grabInteractable != null && grabInteractable.isSelected;
+
         public static event Action<AtomController, AtomController> OnProximityTriggered;
 
         private void Awake()
@@ -93,14 +95,17 @@ namespace VRChemistryLab.Chemistry
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.TryGetComponent<AtomController>(out var otherAtom))
-            {
-                if (grabInteractable.isSelected)
-                {
-                    Debug.Log($"<color=green>[Chemistry]</color> Collision! {this.ElementType} hit {otherAtom.ElementType}");
-                    OnProximityTriggered?.Invoke(this, otherAtom);
-                }
-            }
+            if (!enabled || !gameObject.activeInHierarchy)
+                return;
+
+            if (!collision.gameObject.TryGetComponent<AtomController>(out var otherAtom))
+                return;
+
+            if (otherAtom == this)
+                return;
+
+            Debug.Log($"<color=green>[Chemistry]</color> Collision! {ElementType} hit {otherAtom.ElementType}");
+            OnProximityTriggered?.Invoke(this, otherAtom);
         }
 
         #endregion

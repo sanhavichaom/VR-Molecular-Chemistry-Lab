@@ -19,11 +19,11 @@ namespace VRChemistryLab.Chemistry
         [Tooltip("Layer mask specifically for Atom objects to optimize Physics.OverlapSphere.")]
         [SerializeField] private LayerMask atomLayerMask;
 
-
         public static event Action<MoleculeDefinition, Vector3> OnMoleculeFormed;
 
         private float lastCheckTime = 0f;
         private const float CHECK_COOLDOWN = 0.5f;
+        private bool isProcessingBond = false;
 
         private void OnEnable()
         {
@@ -37,32 +37,44 @@ namespace VRChemistryLab.Chemistry
 
         private void HandleProximityTriggered(AtomController atomA, AtomController atomB)
         {
-            if (Time.time - lastCheckTime < CHECK_COOLDOWN) return;
+            if (isProcessingBond)
+                return;
+
+            if (Time.time - lastCheckTime < CHECK_COOLDOWN)
+                return;
+
+            isProcessingBond = true;
             lastCheckTime = Time.time;
 
-            if (moleculeDatabase == null)
+            try
             {
-                Debug.LogError("BondManager: Molecule Database is not assigned!");
-                return;
+                if (moleculeDatabase == null)
+                {
+                    Debug.LogError("BondManager: Molecule Database is not assigned!");
+                    return;
+                }
+
+                if (atomA == null || atomB == null)
+                    return;
+
+                Vector3 centerPoint = (atomA.transform.position + atomB.transform.position) / 2f;
+                List<AtomController> nearbyAtoms = GetAtomsInRadius(centerPoint, bondingCheckRadius);
+                Dictionary<ElementType, int> elementCounts = CountElements(nearbyAtoms);
+
+                if (TryFindMatchingMolecule(elementCounts, out MoleculeDefinition matchedMolecule))
+                {
+                    FormMolecule(matchedMolecule, nearbyAtoms, centerPoint);
+                }
             }
-
-            Vector3 centerPoint = (atomA.transform.position + atomB.transform.position) / 2f;
-
-            List<AtomController> nearbyAtoms = GetAtomsInRadius(centerPoint, bondingCheckRadius);
-
-            // Tally up the elements found in the cluster
-            Dictionary<ElementType, int> elementCounts = CountElements(nearbyAtoms);
-
-            // Check if this cluster matches any molecule recipe in the database
-            if (TryFindMatchingMolecule(elementCounts, out MoleculeDefinition matchedMolecule))
+            finally
             {
-                FormMolecule(matchedMolecule, nearbyAtoms, centerPoint);
+                isProcessingBond = false;
             }
         }
 
         private List<AtomController> GetAtomsInRadius(Vector3 center, float radius)
         {
-            List<AtomController> foundAtoms = new List<AtomController>();
+            HashSet<AtomController> foundAtoms = new HashSet<AtomController>();
             Collider[] colliders = Physics.OverlapSphere(center, radius, atomLayerMask);
 
             foreach (var col in colliders)
@@ -72,7 +84,8 @@ namespace VRChemistryLab.Chemistry
                     foundAtoms.Add(atom);
                 }
             }
-            return foundAtoms;
+
+            return foundAtoms.ToList();
         }
 
         private Dictionary<ElementType, int> CountElements(List<AtomController> atoms)

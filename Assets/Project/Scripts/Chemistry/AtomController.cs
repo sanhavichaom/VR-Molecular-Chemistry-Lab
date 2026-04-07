@@ -57,11 +57,13 @@ namespace VRChemistryLab.Chemistry
 
         private void OnGrabbed(SelectEnterEventArgs args)
         {
+            Debug.Log($"<color=cyan>[XR Interact]</color> Grabbed: {gameObject.name} ({ElementType})");
             SetHighlight(true);
         }
 
         private void OnReleased(SelectExitEventArgs args)
         {
+            Debug.Log($"<color=yellow>[XR Interact]</color> Released: {gameObject.name}");
             SetHighlight(false);
         }
 
@@ -89,15 +91,13 @@ namespace VRChemistryLab.Chemistry
 
         #region Bonding Logic
 
-        private void OnTriggerEnter(Collider other)
+        private void OnCollisionEnter(Collision collision)
         {
-            // Check if we collided with another atom
-            if (other.TryGetComponent<AtomController>(out var otherAtom))
+            if (collision.gameObject.TryGetComponent<AtomController>(out var otherAtom))
             {
-                // Only trigger the bonding check if THIS atom is currently being held by the player.
-                // This prevents physics jitter from triggering random bonds across the table.
                 if (grabInteractable.isSelected)
                 {
+                    Debug.Log($"<color=green>[Chemistry]</color> Collision! {this.ElementType} hit {otherAtom.ElementType}");
                     OnProximityTriggered?.Invoke(this, otherAtom);
                 }
             }

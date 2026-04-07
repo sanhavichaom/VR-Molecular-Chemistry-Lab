@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -12,7 +11,7 @@ namespace VRChemistryLab.Chemistry
     {
         [Header("Atom Properties")]
         [Tooltip("The specific chemical element this object represents.")]
-        public ElementType ElementType;
+        [SerializeField] private ElementType elementType;
 
         [Header("Visual Feedback")]
         [Tooltip("Material to apply when the user hovers over or grabs the atom.")]
@@ -22,9 +21,8 @@ namespace VRChemistryLab.Chemistry
         private MeshRenderer meshRenderer;
         private XRGrabInteractable grabInteractable;
 
+        public ElementType ElementType => elementType;
         public bool IsGrabbed => grabInteractable != null && grabInteractable.isSelected;
-
-        public static event Action<AtomController, AtomController> OnProximityTriggered;
 
         private void Awake()
         {
@@ -39,7 +37,9 @@ namespace VRChemistryLab.Chemistry
 
         private void OnEnable()
         {
-            // Subscribe to XR Interaction Toolkit events
+            if (grabInteractable == null)
+                return;
+
             grabInteractable.selectEntered.AddListener(OnGrabbed);
             grabInteractable.selectExited.AddListener(OnReleased);
             grabInteractable.hoverEntered.AddListener(OnHovered);
@@ -48,66 +48,45 @@ namespace VRChemistryLab.Chemistry
 
         private void OnDisable()
         {
-            // Always unsubscribe to prevent memory leaks
+            if (grabInteractable == null)
+                return;
+
             grabInteractable.selectEntered.RemoveListener(OnGrabbed);
             grabInteractable.selectExited.RemoveListener(OnReleased);
             grabInteractable.hoverEntered.RemoveListener(OnHovered);
             grabInteractable.hoverExited.RemoveListener(OnUnhovered);
         }
 
-        #region XR Interaction Callbacks
-
         private void OnGrabbed(SelectEnterEventArgs args)
         {
-            Debug.Log($"<color=cyan>[XR Interact]</color> Grabbed: {gameObject.name} ({ElementType})");
+            Debug.Log($"<color=cyan>[XR]</color> Grabbed: {gameObject.name} ({elementType})");
             SetHighlight(true);
         }
 
         private void OnReleased(SelectExitEventArgs args)
         {
-            Debug.Log($"<color=yellow>[XR Interact]</color> Released: {gameObject.name}");
+            Debug.Log($"<color=yellow>[XR]</color> Released: {gameObject.name} ({elementType})");
             SetHighlight(false);
         }
 
         private void OnHovered(HoverEnterEventArgs args)
         {
-            if (!grabInteractable.isSelected)
+            if (!IsGrabbed)
                 SetHighlight(true);
         }
 
         private void OnUnhovered(HoverExitEventArgs args)
         {
-            if (!grabInteractable.isSelected)
+            if (!IsGrabbed)
                 SetHighlight(false);
         }
 
         private void SetHighlight(bool isHighlighted)
         {
-            if (meshRenderer != null && highlightMaterial != null)
-            {
-                meshRenderer.material = isHighlighted ? highlightMaterial : originalMaterial;
-            }
+            if (meshRenderer == null || highlightMaterial == null || originalMaterial == null)
+                return;
+
+            meshRenderer.material = isHighlighted ? highlightMaterial : originalMaterial;
         }
-
-        #endregion
-
-        #region Bonding Logic
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (!enabled || !gameObject.activeInHierarchy)
-                return;
-
-            if (!collision.gameObject.TryGetComponent<AtomController>(out var otherAtom))
-                return;
-
-            if (otherAtom == this)
-                return;
-
-            Debug.Log($"<color=green>[Chemistry]</color> Collision! {ElementType} hit {otherAtom.ElementType}");
-            OnProximityTriggered?.Invoke(this, otherAtom);
-        }
-
-        #endregion
     }
 }

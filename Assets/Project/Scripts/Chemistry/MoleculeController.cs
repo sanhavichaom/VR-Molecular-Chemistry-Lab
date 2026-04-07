@@ -1,0 +1,96 @@
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using VRChemistryLab.Data;
+
+namespace VRChemistryLab.Chemistry
+{
+    [RequireComponent(typeof(XRGrabInteractable))]
+    [RequireComponent(typeof(Rigidbody))]
+    public class MoleculeController : MonoBehaviour
+    {
+        [Header("Visual Feedback")]
+        [Tooltip("Material to apply when the user hovers over or grabs the molecule.")]
+        [SerializeField] private Material _highlightMaterial;
+
+        // เก็บข้อมูลว่าโมเลกุลนี้คืออะไร (ใช้สำหรับส่งให้ UI Inspector)
+        public MoleculeDefinition Definition { get; private set; }
+
+        private Material[] _originalMaterials;
+        private MeshRenderer[] _meshRenderers;
+        private XRGrabInteractable _grabInteractable;
+
+        public bool IsGrabbed => _grabInteractable != null && _grabInteractable.isSelected;
+
+        private void Awake()
+        {
+            _grabInteractable = GetComponent<XRGrabInteractable>();
+
+            // โมเลกุลอาจจะมีหลาย Mesh (เช่น อะตอมหลายลูกประกอบกัน) เลยใช้ GetComponentsInChildren
+            _meshRenderers = GetComponentsInChildren<MeshRenderer>();
+            _originalMaterials = new Material[_meshRenderers.Length];
+
+            for (int i = 0; i < _meshRenderers.Length; i++)
+            {
+                _originalMaterials[i] = _meshRenderers[i].material;
+            }
+        }
+
+        private void OnEnable()
+        {
+            if (_grabInteractable == null) return;
+
+            _grabInteractable.selectEntered.AddListener(OnGrabbed);
+            _grabInteractable.selectExited.AddListener(OnReleased);
+            _grabInteractable.hoverEntered.AddListener(OnHovered);
+            _grabInteractable.hoverExited.AddListener(OnUnhovered);
+        }
+
+        private void OnDisable()
+        {
+            if (_grabInteractable == null) return;
+
+            _grabInteractable.selectEntered.RemoveListener(OnGrabbed);
+            _grabInteractable.selectExited.RemoveListener(OnReleased);
+            _grabInteractable.hoverEntered.RemoveListener(OnHovered);
+            _grabInteractable.hoverExited.RemoveListener(OnUnhovered);
+        }
+
+        // Method นี้จะถูกเรียกจาก BondManager ตอนที่ Spawn โมเลกุลสำเร็จ
+        public void Initialize(MoleculeDefinition definition)
+        {
+            Definition = definition;
+            Debug.Log($"<color=green>[MoleculeController]</color> Initialized: {Definition.MoleculeName} ({Definition.Formula})");
+        }
+
+        private void OnGrabbed(SelectEnterEventArgs args)
+        {
+            SetHighlight(true);
+        }
+
+        private void OnReleased(SelectExitEventArgs args)
+        {
+            SetHighlight(false);
+        }
+
+        private void OnHovered(HoverEnterEventArgs args)
+        {
+            if (!IsGrabbed) SetHighlight(true);
+        }
+
+        private void OnUnhovered(HoverExitEventArgs args)
+        {
+            if (!IsGrabbed) SetHighlight(false);
+        }
+
+        private void SetHighlight(bool isHighlighted)
+        {
+            if (_highlightMaterial == null || _meshRenderers.Length == 0) return;
+
+            for (int i = 0; i < _meshRenderers.Length; i++)
+            {
+                _meshRenderers[i].material = isHighlighted ? _highlightMaterial : _originalMaterials[i];
+            }
+        }
+    }
+}

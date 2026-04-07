@@ -248,7 +248,16 @@ namespace VRChemistryLab.Chemistry
 
             if (hasPrefab)
             {
-                Instantiate(molecule.MoleculePrefab, spawnPosition, Quaternion.identity);
+                GameObject spawnedMolecule = Instantiate(molecule.MoleculePrefab, spawnPosition, Quaternion.identity);
+
+                if (spawnedMolecule.TryGetComponent<MoleculeController>(out var molController))
+                {
+                    molController.Initialize(molecule);
+                }
+                else
+                {
+                    Debug.LogWarning($"BondManager: {molecule.MoleculeName} prefab is missing a MoleculeController component!");
+                }
             }
 
             OnMoleculeFormed?.Invoke(molecule, spawnPosition);

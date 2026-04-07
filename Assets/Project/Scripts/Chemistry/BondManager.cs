@@ -101,29 +101,67 @@ namespace VRChemistryLab.Chemistry
             return counts;
         }
 
-        private bool TryFindMatchingMolecule(Dictionary<ElementType, int> currentElements, out MoleculeDefinition matchedMolecule)
+        private bool TryFindMatchingMolecule(Dictionary<ElementType, int> currentElements,out MoleculeDefinition matchedMolecule)
         {
             matchedMolecule = default;
 
+            bool foundMatch = false;
+            int bestMatchAtomCount = 0;
+
             foreach (var recipe in moleculeDatabase.ValidMolecules)
             {
-                // Create a temporary dictionary for the recipe requirements
-                Dictionary<ElementType, int> requiredElements = new Dictionary<ElementType, int>();
-                foreach (var req in recipe.RequiredAtoms)
-                {
-                    requiredElements[req.Element] = req.RequiredCount;
-                }
+                Dictionary<ElementType, int> requiredElements = BuildRequiredElements(recipe);
+                int totalRequiredAtoms = GetTotalRequiredAtomCount(recipe);
 
-                // Check if current elements exactly match the required elements (both type and quantity)
-                bool isMatch = requiredElements.Count == currentElements.Count && !requiredElements.Except(currentElements).Any();
+                if (!IsRecipeSatisfied(currentElements, requiredElements))
+                    continue;
 
-                if (isMatch)
+                if (totalRequiredAtoms > bestMatchAtomCount)
                 {
+                    bestMatchAtomCount = totalRequiredAtoms;
                     matchedMolecule = recipe;
-                    return true;
+                    foundMatch = true;
                 }
             }
-            return false;
+
+            return foundMatch;
+        }
+        private Dictionary<ElementType, int> BuildRequiredElements(MoleculeDefinition recipe)
+        {
+            Dictionary<ElementType, int> requiredElements = new Dictionary<ElementType, int>();
+
+            foreach (var req in recipe.RequiredAtoms)
+            {
+                requiredElements[req.Element] = req.RequiredCount;
+            }
+
+            return requiredElements;
+        }
+
+        private int GetTotalRequiredAtomCount(MoleculeDefinition recipe)
+        {
+            int total = 0;
+
+            foreach (var req in recipe.RequiredAtoms)
+            {
+                total += req.RequiredCount;
+            }
+
+            return total;
+        }
+
+        private bool IsRecipeSatisfied(Dictionary<ElementType, int> currentElements,Dictionary<ElementType, int> requiredElements)
+        {
+            foreach (var pair in requiredElements)
+            {
+                if (!currentElements.TryGetValue(pair.Key, out int currentCount))
+                    return false;
+
+                if (currentCount < pair.Value)
+                    return false;
+            }
+
+            return true;
         }
 
         private void FormMolecule(MoleculeDefinition molecule, List<AtomController> usedAtoms, Vector3 spawnPosition)

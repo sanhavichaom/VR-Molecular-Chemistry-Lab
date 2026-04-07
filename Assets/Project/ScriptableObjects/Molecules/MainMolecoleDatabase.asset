@@ -28,7 +28,7 @@ MonoBehaviour:
       RequiredCount: 2
     - Element: 1
       RequiredCount: 1
-    MoleculePrefab: {fileID: 0}
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 926b25a23d9dfa7429e70070d4d66006, type: 3}
   - MoleculeName: Hydrogen Gas
     Formula: H2
     BondType: Single Covalent

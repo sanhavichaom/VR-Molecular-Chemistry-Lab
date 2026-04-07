@@ -13,7 +13,6 @@ namespace VRChemistryLab.Chemistry
         [Tooltip("Material to apply when the user hovers over or grabs the molecule.")]
         [SerializeField] private Material _highlightMaterial;
 
-        // เก็บข้อมูลว่าโมเลกุลนี้คืออะไร (ใช้สำหรับส่งให้ UI Inspector)
         public MoleculeDefinition Definition { get; private set; }
 
         private Material[] _originalMaterials;
@@ -26,7 +25,6 @@ namespace VRChemistryLab.Chemistry
         {
             _grabInteractable = GetComponent<XRGrabInteractable>();
 
-            // โมเลกุลอาจจะมีหลาย Mesh (เช่น อะตอมหลายลูกประกอบกัน) เลยใช้ GetComponentsInChildren
             _meshRenderers = GetComponentsInChildren<MeshRenderer>();
             _originalMaterials = new Material[_meshRenderers.Length];
 
@@ -56,7 +54,6 @@ namespace VRChemistryLab.Chemistry
             _grabInteractable.hoverExited.RemoveListener(OnUnhovered);
         }
 
-        // Method นี้จะถูกเรียกจาก BondManager ตอนที่ Spawn โมเลกุลสำเร็จ
         public void Initialize(MoleculeDefinition definition)
         {
             Definition = definition;

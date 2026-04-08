@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using VRChemistryLab.Chemistry;
@@ -13,7 +14,7 @@ namespace VRChemistryLab.UI
 
         [Header("Molecule Inspector Panel")]
         [Tooltip("Assign the MoleculeInspectorCanvas (root canvas) here.")]
-        [SerializeField] private Transform _canvasTransform;
+        [SerializeField] private Transform _inspectorCanvasTransform;
 
         [Tooltip("Assign the BackgroundPanel containing the Canvas Group here.")]
         [SerializeField] private CanvasGroup _inspectorPanelGroup;
@@ -22,7 +23,7 @@ namespace VRChemistryLab.UI
         [SerializeField] private TextMeshProUGUI _formulaText;
         [SerializeField] private TextMeshProUGUI _bondInfoText;
 
-        [Header("Placement Settings")]
+        [Header("Inspector Placement Settings")]
         [Tooltip("Distance from the player's headset to spawn the UI.")]
         [SerializeField] private float _distanceFromPlayer = 1.2f;
 
@@ -32,13 +33,28 @@ namespace VRChemistryLab.UI
         [Tooltip("How smoothly the UI follows the player's gaze. Higher value = faster follow.")]
         [SerializeField] private float _followSpeed = 8.0f;
 
+        [Header("Molecule Library Panel")]
+        [Tooltip("The Text component on the wall/board to display the list of discovered molecules.")]
+        [SerializeField] private TextMeshProUGUI _libraryListText;
+
+        [Tooltip("The text showing the total count (e.g., 'Discovered: 1 / 7').")]
+        [SerializeField] private TextMeshProUGUI _discoveryCountText;
+
+        [Tooltip("Total number of required molecules to find (at least 7 based on the assessment).")]
+        [SerializeField] private int _totalMoleculesToFind = 7;
+
         private bool _isShowingInfo = false;
+
+        private HashSet<string> _discoveredMolecules = new HashSet<string>();
 
         private void OnEnable()
         {
-            // Subscribe to the molecule events
+            // Subscribe to events
             MoleculeController.OnMoleculeExamined += ShowMoleculeInfo;
             MoleculeController.OnMoleculeReleased += HideMoleculeInfo;
+
+            // Listen for newly formed molecules
+            BondManager.OnMoleculeFormed += HandleMoleculeFormed;
         }
 
         private void OnDisable()
@@ -46,40 +62,69 @@ namespace VRChemistryLab.UI
             // Unsubscribe to prevent memory leaks
             MoleculeController.OnMoleculeExamined -= ShowMoleculeInfo;
             MoleculeController.OnMoleculeReleased -= HideMoleculeInfo;
+            BondManager.OnMoleculeFormed -= HandleMoleculeFormed;
         }
 
         private void Start()
         {
             HideMoleculeInfo();
+            UpdateLibraryUI();
         }
 
         private void LateUpdate()
         {
             if (_isShowingInfo)
+            {
                 UpdatePanelPosition();
+            }
+        }
+
+        private void HandleMoleculeFormed(MoleculeDefinition definition, Vector3 spawnPosition)
+        {
+            if (!_discoveredMolecules.Contains(definition.MoleculeName))
+            {
+                _discoveredMolecules.Add(definition.MoleculeName);
+                Debug.Log($"<color=green>[UIManager]</color> New Discovery: {definition.MoleculeName}");
+
+                UpdateLibraryUI();
+            }
+        }
+
+        private void UpdateLibraryUI()
+        {
+            if (_libraryListText == null || _discoveryCountText == null) return;
+
+            _discoveryCountText.text = $"Discovered: {_discoveredMolecules.Count} / {_totalMoleculesToFind}";
+
+            if (_discoveredMolecules.Count == 0)
+            {
+                _libraryListText.text = "No molecules discovered yet.\n\nTry combining atoms!";
+                return;
+            }
+
+            string listContent = "";
+            foreach (string moleculeName in _discoveredMolecules)
+            {
+                listContent += $"• {moleculeName}\n";
+            }
+
+            _libraryListText.text = listContent;
         }
 
         private void ShowMoleculeInfo(MoleculeDefinition definition)
         {
             if (_inspectorPanelGroup == null) return;
 
-            if (_nameText != null)
-                _nameText.text = $"Name: {definition.MoleculeName}";
-            if (_formulaText != null)
-                _formulaText.text = $"Formula: {definition.Formula}";
-            if (_bondInfoText != null)
-                _bondInfoText.text = $"Bond: {definition.BondType}";
+            _nameText.text = $"Name: {definition.MoleculeName}";
+            _formulaText.text = $"Formula: {definition.Formula}";
+            _bondInfoText.text = $"Bond: {definition.BondType}";
 
             _isShowingInfo = true;
-
             SnapPanelPosition();
 
-            if (_inspectorPanelGroup != null)
-            {
-                _inspectorPanelGroup.alpha = 1f;
-                _inspectorPanelGroup.interactable = true;
-                _inspectorPanelGroup.blocksRaycasts = true;
-            }
+            _inspectorPanelGroup.alpha = 1f;
+            _inspectorPanelGroup.interactable = true;
+            _inspectorPanelGroup.blocksRaycasts = true;
         }
 
         private void HideMoleculeInfo()
@@ -87,7 +132,6 @@ namespace VRChemistryLab.UI
             if (_inspectorPanelGroup == null) return;
 
             _isShowingInfo = false;
-
             _inspectorPanelGroup.alpha = 0f;
             _inspectorPanelGroup.interactable = false;
             _inspectorPanelGroup.blocksRaycasts = false;
@@ -95,27 +139,26 @@ namespace VRChemistryLab.UI
 
         private void UpdatePanelPosition()
         {
-            if (_cameraTransform == null || _canvasTransform == null) return;
+            if (_cameraTransform == null || _inspectorCanvasTransform == null) return;
 
             Vector3 targetPosition = _cameraTransform.position + (_cameraTransform.forward * _distanceFromPlayer);
-
             targetPosition.y = _cameraTransform.position.y + _verticalOffset;
 
-            _canvasTransform.position = Vector3.Lerp(_canvasTransform.position, targetPosition, Time.deltaTime * _followSpeed);
+            _inspectorCanvasTransform.position = Vector3.Lerp(_inspectorCanvasTransform.position, targetPosition, Time.deltaTime * _followSpeed);
 
-            Quaternion targetRotation = Quaternion.LookRotation(_canvasTransform.position - _cameraTransform.position);
-            _canvasTransform.rotation = Quaternion.Slerp(_canvasTransform.rotation, targetRotation, Time.deltaTime * _followSpeed);
+            Quaternion targetRotation = Quaternion.LookRotation(_inspectorCanvasTransform.position - _cameraTransform.position);
+            _inspectorCanvasTransform.rotation = Quaternion.Slerp(_inspectorCanvasTransform.rotation, targetRotation, Time.deltaTime * _followSpeed);
         }
 
         private void SnapPanelPosition()
         {
-            if (_cameraTransform == null || _canvasTransform == null) return;
+            if (_cameraTransform == null || _inspectorCanvasTransform == null) return;
 
             Vector3 targetPosition = _cameraTransform.position + (_cameraTransform.forward * _distanceFromPlayer);
             targetPosition.y = _cameraTransform.position.y + _verticalOffset;
 
-            _canvasTransform.position = targetPosition;
-            _canvasTransform.rotation = Quaternion.LookRotation(_canvasTransform.position - _cameraTransform.position);
+            _inspectorCanvasTransform.position = targetPosition;
+            _inspectorCanvasTransform.rotation = Quaternion.LookRotation(_inspectorCanvasTransform.position - _cameraTransform.position);
         }
     }
 }

@@ -119,7 +119,7 @@ namespace VRChemistryLab.Chemistry
                 }
             }
 
-            return bestGroup;
+            return atoms;
         }
 
         private Dictionary<ElementType, int> CountElements(List<AtomController> atoms)

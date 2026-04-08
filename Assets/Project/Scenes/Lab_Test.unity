@@ -1965,7 +1965,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Chemistry.BondManager
   _moleculeDatabase: {fileID: 11400000, guid: 2fd0a0103a4e6e5428e0970e3650435d, type: 2}
-  _bondingCheckRadius: 0.2
+  _bondingCheckRadius: 1
   _checkCooldown: 5
   _debugModeWithoutPrefab: 1
   _destroyAtomsEvenWithoutPrefab: 1
@@ -3279,7 +3279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Chemistry.BondingZone
   _bondManager: {fileID: 1005173605}
-  _stabilityTime: 7
+  _stabilityTime: 5
 --- !u!4 &1885587964
 Transform:
   m_ObjectHideFlags: 0
@@ -4063,7 +4063,6 @@ SceneRoots:
   - {fileID: 1190398704}
   - {fileID: 564015083}
   - {fileID: 1242566327}
-  - {fileID: 1005173606}
   - {fileID: 779238145}
   - {fileID: 1915643170}
   - {fileID: 1885587964}
@@ -4077,3 +4076,4 @@ SceneRoots:
   - {fileID: 1257996947}
   - {fileID: 782232585}
   - {fileID: 1764631488}
+  - {fileID: 1005173606}

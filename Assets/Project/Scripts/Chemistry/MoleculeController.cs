@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -28,14 +29,23 @@ namespace VRChemistryLab.Chemistry
         private void Awake()
         {
             _grabInteractable = GetComponent<XRGrabInteractable>();
+            List<MeshRenderer> filteredRenderers = new List<MeshRenderer>();
+            List<Material> filteredMaterials = new List<Material>();
 
-            _meshRenderers = GetComponentsInChildren<MeshRenderer>();
-            _originalMaterials = new Material[_meshRenderers.Length];
+            MeshRenderer[] allRenderers = GetComponentsInChildren<MeshRenderer>();
 
-            for (int i = 0; i < _meshRenderers.Length; i++)
+            foreach (var renderer in allRenderers)
             {
-                _originalMaterials[i] = _meshRenderers[i].material;
+                if (renderer.GetComponent<TMPro.TextMeshPro>() == null &&
+                    renderer.GetComponent<TMPro.TextMeshProUGUI>() == null)
+                {
+                    filteredRenderers.Add(renderer);
+                    filteredMaterials.Add(renderer.material);
+                }
             }
+
+            _meshRenderers = filteredRenderers.ToArray();
+            _originalMaterials = filteredMaterials.ToArray();
         }
 
         private void OnEnable()

@@ -70,3 +70,103 @@ MonoBehaviour:
     - Element: 0
       RequiredCount: 4
     MoleculePrefab: {fileID: 8618242438872457755, guid: e3da35e9a9b872746baa2f037641a8ed, type: 3}
+  - MoleculeName: Hydrogen Cyanide
+    Formula: HCN
+    BondType: Triple Covalent
+    RequiredAtoms:
+    - Element: 0
+      RequiredCount: 1
+    - Element: 2
+      RequiredCount: 1
+    - Element: 3
+      RequiredCount: 1
+    MoleculePrefab: {fileID: 8618242438872457755, guid: b7040812981f65344a7eea7823f5d9fa, type: 3}
+  - MoleculeName: Nitric Oxide
+    Formula: NO
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 3
+      RequiredCount: 1
+    - Element: 1
+      RequiredCount: 1
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 0bdf1ce84c3cad04daad4dc1a10808a0, type: 3}
+  - MoleculeName: Hydroxyl Radical
+    Formula: OH
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 0
+      RequiredCount: 1
+    - Element: 1
+      RequiredCount: 1
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 696012ca71ac7d640b2dc1f37bdd9227, type: 3}
+  - MoleculeName: Carbon Monoxide
+    Formula: CO
+    BondType: Triple Covalent
+    RequiredAtoms:
+    - Element: 2
+      RequiredCount: 1
+    - Element: 1
+      RequiredCount: 1
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 326c41631b0353646a118eb4fe1755e9, type: 3}
+  - MoleculeName: Hydrazine
+    Formula: N2H4
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 3
+      RequiredCount: 2
+    - Element: 0
+      RequiredCount: 4
+    MoleculePrefab: {fileID: 8618242438872457755, guid: abf0bb82837e65143aafa9a2c6eee1b3, type: 3}
+  - MoleculeName: Diazene
+    Formula: N2H2
+    BondType: Double Covalent
+    RequiredAtoms:
+    - Element: 3
+      RequiredCount: 2
+    - Element: 0
+      RequiredCount: 2
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 20bb5aea50399794592dd3ae0ca4294c, type: 3}
+  - MoleculeName: Cyanogen
+    Formula: C2N2
+    BondType: Triple Covalent
+    RequiredAtoms:
+    - Element: 2
+      RequiredCount: 2
+    - Element: 3
+      RequiredCount: 2
+    MoleculePrefab: {fileID: 8618242438872457755, guid: e75ae7fe62cb82f42a5d39ac6262e4b4, type: 3}
+  - MoleculeName: Formaldehyde
+    Formula: CH2O
+    BondType: Double Covalent
+    RequiredAtoms:
+    - Element: 2
+      RequiredCount: 1
+    - Element: 0
+      RequiredCount: 2
+    - Element: 1
+      RequiredCount: 1
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 7d483af17372bb4408f5e0e14e68d40b, type: 3}
+  - MoleculeName: Methanol
+    Formula: CH4O
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 2
+      RequiredCount: 1
+    - Element: 0
+      RequiredCount: 4
+    - Element: 1
+      RequiredCount: 1
+    MoleculePrefab: {fileID: 8618242438872457755, guid: c6ef3f9465e869a4aa31dd27111fc75e, type: 3}
+  - MoleculeName: Urea
+    Formula: CH4N2O
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 2
+      RequiredCount: 1
+    - Element: 0
+      RequiredCount: 4
+    - Element: 3
+      RequiredCount: 2
+    - Element: 1
+      RequiredCount: 1
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 25de143078632434db463b8871511f3a, type: 3}

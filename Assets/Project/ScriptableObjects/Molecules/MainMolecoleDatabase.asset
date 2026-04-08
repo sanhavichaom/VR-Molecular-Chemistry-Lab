@@ -170,3 +170,16 @@ MonoBehaviour:
     - Element: 1
       RequiredCount: 1
     MoleculePrefab: {fileID: 8618242438872457755, guid: 25de143078632434db463b8871511f3a, type: 3}
+  - MoleculeName: Glycine
+    Formula: C2H5NO2
+    BondType: Covalent
+    RequiredAtoms:
+    - Element: 2
+      RequiredCount: 2
+    - Element: 0
+      RequiredCount: 5
+    - Element: 3
+      RequiredCount: 1
+    - Element: 1
+      RequiredCount: 2
+    MoleculePrefab: {fileID: 8618242438872457755, guid: 8cd712693fde4c24a9be94be07c90f77, type: 3}

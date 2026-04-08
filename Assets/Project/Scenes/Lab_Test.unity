@@ -1018,7 +1018,7 @@ MonoBehaviour:
   _followSpeed: 8
   _libraryListText: {fileID: 2059753438}
   _discoveryCountText: {fileID: 1550920442}
-  _totalMoleculesToFind: 7
+  _totalMoleculesToFind: 18
 --- !u!4 &599988879
 Transform:
   m_ObjectHideFlags: 0
@@ -1546,7 +1546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e58d7294fd786c43af0ec7207268461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Audio.AudioManager
-  _bondSuccessClip: {fileID: 0}
+  _bondSuccessClip: {fileID: 8300000, guid: 4e9082d6564a89143835b9c1e9b677da, type: 3}
 --- !u!82 &772941416
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1830,7 +1830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Chemistry.AtomSpawner
   _atomPrefab: {fileID: 8618242438872457755, guid: dec9b203a7b1b624e9a69b86243b331f, type: 3}
-  _spawnDelay: 5
+  _spawnDelay: 3
 --- !u!1 &889056609
 GameObject:
   m_ObjectHideFlags: 0
@@ -2029,7 +2029,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Chemistry.AtomSpawner
   _atomPrefab: {fileID: 8618242438872457755, guid: fb1647cb8fc40f147a5d693629642641, type: 3}
-  _spawnDelay: 5
+  _spawnDelay: 3
 --- !u!1 &1173785042
 GameObject:
   m_ObjectHideFlags: 0
@@ -2324,7 +2324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Chemistry.AtomSpawner
   _atomPrefab: {fileID: 8618242438872457755, guid: 3cbda93fe080bc342b230e0dd3d2c8d0, type: 3}
-  _spawnDelay: 5
+  _spawnDelay: 3
 --- !u!1 &1242566325
 GameObject:
   m_ObjectHideFlags: 0
@@ -3125,37 +3125,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1767192434, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
   m_PrefabInstance: {fileID: 1915643170}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1737880974
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1737880975}
-  m_Layer: 0
-  m_Name: AtomSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1737880975
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1737880974}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.03923, y: -1.10155, z: -5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1764631488}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1764631487
 GameObject:
   m_ObjectHideFlags: 0
@@ -3188,7 +3157,6 @@ Transform:
   - {fileID: 772941417}
   - {fileID: 2018538261}
   - {fileID: 599988879}
-  - {fileID: 1737880975}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1883095075
@@ -3311,7 +3279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Chemistry.BondingZone
   _bondManager: {fileID: 1005173605}
-  _stabilityTime: 10
+  _stabilityTime: 7
 --- !u!4 &1885587964
 Transform:
   m_ObjectHideFlags: 0
@@ -4023,7 +3991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Chemistry.AtomSpawner
   _atomPrefab: {fileID: 8618242438872457755, guid: 580b96ba1c598634183df7543710bf50, type: 3}
-  _spawnDelay: 5
+  _spawnDelay: 3
 --- !u!1001 &2103460898
 PrefabInstance:
   m_ObjectHideFlags: 0

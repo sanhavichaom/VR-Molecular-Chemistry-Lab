@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -18,6 +19,9 @@ namespace VRChemistryLab.Chemistry
         private Material[] _originalMaterials;
         private MeshRenderer[] _meshRenderers;
         private XRGrabInteractable _grabInteractable;
+
+        public static event Action<MoleculeDefinition> OnMoleculeExamined;
+        public static event Action OnMoleculeReleased;
 
         public bool IsGrabbed => _grabInteractable != null && _grabInteractable.isSelected;
 
@@ -63,11 +67,13 @@ namespace VRChemistryLab.Chemistry
         private void OnGrabbed(SelectEnterEventArgs args)
         {
             SetHighlight(true);
+            OnMoleculeExamined?.Invoke(Definition);
         }
 
         private void OnReleased(SelectExitEventArgs args)
         {
             SetHighlight(false);
+            OnMoleculeReleased?.Invoke();
         }
 
         private void OnHovered(HoverEnterEventArgs args)

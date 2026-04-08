@@ -19,15 +19,17 @@ namespace VRChemistryLab.Chemistry
         [SerializeField] private List<AtomPrefabMapping> _atomPrefabs = new List<AtomPrefabMapping>();
 
         [Header("Spawn Settings")]
-        [Tooltip("Slight random offset so spawned atoms don't overlap perfectly and explode due to physics.")]
-        [SerializeField] private float _spawnOffsetRadius = 0.15f;
+        [Tooltip("The radius of the circle to arrange spawned atoms, preventing physics overlap.")]
+        [SerializeField] private float _spawnRadius = 0.2f;
+
+        [Tooltip("How high above the molecule's original position the atoms should spawn to drop gently.")]
+        [SerializeField] private float _spawnHeightOffset = 0.1f;
 
         // Cache for quick lookup
         private Dictionary<ElementType, GameObject> _prefabDictionary;
 
         private void Awake()
         {
-            // Convert list to dictionary for faster lookups when spawning
             _prefabDictionary = new Dictionary<ElementType, GameObject>();
             foreach (var mapping in _atomPrefabs)
             {
@@ -45,16 +47,37 @@ namespace VRChemistryLab.Chemistry
             Vector3 breakPosition = molecule.transform.position;
             string moleculeName = molecule.Definition.MoleculeName;
 
-            // 1. Spawn the required atoms back into the world
+            int totalAtoms = 0;
+            foreach (var requirement in molecule.Definition.RequiredAtoms)
+            {
+                totalAtoms += requirement.RequiredCount;
+            }
+
+            if (totalAtoms == 0) return;
+
+            float angleStep = (Mathf.PI * 2f) / totalAtoms;
+            int currentSpawnIndex = 0;
+
             foreach (var requirement in molecule.Definition.RequiredAtoms)
             {
                 if (_prefabDictionary.TryGetValue(requirement.Element, out GameObject atomPrefab))
                 {
                     for (int i = 0; i < requirement.RequiredCount; i++)
                     {
-                        // Add a small random offset so they don't spawn inside each other
-                        Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * _spawnOffsetRadius;
-                        Instantiate(atomPrefab, breakPosition + randomOffset, Quaternion.identity);
+                        float angle = currentSpawnIndex * angleStep;
+                        Vector3 offset = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * _spawnRadius;
+
+                        Vector3 spawnPos = breakPosition + offset + (Vector3.up * _spawnHeightOffset);
+
+                        GameObject newAtom = Instantiate(atomPrefab, spawnPos, Quaternion.identity);
+
+                        if (newAtom.TryGetComponent<Rigidbody>(out Rigidbody rb))
+                        {
+                            rb.linearVelocity = Vector3.zero;
+                            rb.angularVelocity = Vector3.zero;
+                        }
+
+                        currentSpawnIndex++;
                     }
                 }
                 else
@@ -63,7 +86,7 @@ namespace VRChemistryLab.Chemistry
                 }
             }
 
-            // 2. Destroy the molecule
+            // 3. Destroy the molecule
             Destroy(molecule.gameObject);
             Debug.Log($"<color=green>[ResetManager]</color> Successfully broke apart: {moleculeName}");
         }

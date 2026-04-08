@@ -498,4 +498,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRChemistryLab.Chemistry.AtomController
   elementType: 0
-  highlightMaterial: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
+  highlightMaterial: {fileID: 2100000, guid: 255c924eb76219047811891eb86ac316, type: 2}
